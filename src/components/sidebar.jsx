@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { Layout, Menu, Icon } from 'antd';
-import './App.sass';
-import ToDoList from '@/views/ToDoList';
 
-const { Header, Sider, Content } = Layout;
+const { Sider } = Layout;
 
-class SiderDemo extends Component {
+export default class extends Component {
   state = {
     collapsed: false,
   };
@@ -18,7 +16,6 @@ class SiderDemo extends Component {
 
   render() {
     return (
-      <Layout>
         <Sider
           trigger={null}
           collapsible
@@ -40,31 +37,6 @@ class SiderDemo extends Component {
             </Menu.Item>
           </Menu>
         </Sider>
-        <Layout>
-          <Header style={{ background: '#fff', padding: 0 }}>
-            <Icon
-              className="trigger"
-              type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-              onClick={this.toggle}
-            />
-          </Header>
-          <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
-            <ToDoList />
-          </Content>
-        </Layout>
-      </Layout>
     );
   }
 }
-
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <SiderDemo />
-      </div>
-    );
-  }
-}
-
-export default App;
