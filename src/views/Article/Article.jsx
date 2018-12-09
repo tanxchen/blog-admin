@@ -31,12 +31,12 @@ export default class extends Component {
       title: '创建日期',
       key: 'createDate',
       align: 'center',
-      dataIndex: 'meta.createAt'
+      dataIndex: 'meta.createDate'
     }, {
       title: '修改日期',
       key: 'updateDate',
       align: 'center',
-      dataIndex: 'meta.updateAt'
+      dataIndex: 'meta.updateDate'
     }, {
       title: '操作',
       key: 'action',

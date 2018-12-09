@@ -45,7 +45,7 @@ export default class extends Component {
               collapsible
               collapsed={this.state.collapsed}
             >
-              <div className="menu-logo">ADMIN</div>
+              <div className="menu-logo">R</div>
               <Menu theme="light" mode="inline" defaultSelectedKeys={['article']}
                 // selectedKeys={this.state.selectedKeys}
               >

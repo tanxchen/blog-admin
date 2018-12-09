@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import marked from 'marked'
-import { Input, Button, Select } from 'antd';
+import { Input, Button, Checkbox } from 'antd';
+
+const CheckboxGroup = Checkbox.Group;
+
 // import debounce from 'lodash/debounce'
 // import _ from 'lodash'
-const Option = Select.Option
 
 export default class extends Component {
   state = {
@@ -29,6 +31,7 @@ export default class extends Component {
       })
     }
     this.md2code()
+    this.getTagList()
   }
 
   changeText = (event) => {
@@ -44,11 +47,24 @@ export default class extends Component {
     }))
   }
 
-  handleSelectChange = (value) => {
-    console.log(value);
-    // this.props.form.setFieldsValue({
-    //   note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
-    // });
+  onTagChange = (checkedValues) => {
+    console.log('checked = ', checkedValues);
+  }
+
+  getTagList = () => {
+    window.$http.get('/api/tags')
+      .then(res => {
+        console.log(res);
+        res.forEach(element => {
+          element.label = element.value = element.name
+        });
+        this.setState({
+          tagList: res
+        })
+      })
+      .catch((e) => {
+        console.log(e);
+      })
   }
 
   render () {
@@ -58,22 +74,12 @@ export default class extends Component {
     return (
       <div id="editor">
         <div className="mgb20">
-          <Button type="primary" icon="plus" className="mgb20">发布</Button>
-          <div>
+          <div className="mgb20 sbtn">
             <label>标题：<Input placeholder="请输入标题" /></label>
-            <label>标签：
-              <Select
-                placeholder="请选择标签"
-                onChange={this.handleSelectChange}
-                style={{ width: 120 }}
-              >
-                {
-                  this.state.tagList.map((tag, index) => 
-                    <Option value={tag}>{tag}</Option>
-                  )
-                }
-              </Select>
-            </label>
+            <Button type="primary" icon="plus">发布</Button>
+          </div>
+          <div>
+            标签：<CheckboxGroup options={this.state.tagList} defaultValue={[]} onChange={this.onTagChange} />
           </div>
         </div>
         <textarea value={this.state.input} onChange={this.changeText}></textarea>
