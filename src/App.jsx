@@ -6,9 +6,27 @@ import Routers from '@/router'
 
 const { Header, Sider, Content } = Layout;
 
+const menuList = [
+  {
+    path: 'article',
+    icon: 'user',
+    name: '文章列表'
+  },
+  {
+    path: 'editArticle',
+    icon: 'video-camera',
+    name: '编辑文章'
+  },
+  {
+    path: 'tag',
+    icon: 'upload',
+    name: '标签'
+  }
+]
+
 export default class extends Component {
   state = {
-    collapsed: false,
+    collapsed: false
   };
 
   toggle = () => {
@@ -27,26 +45,20 @@ export default class extends Component {
               collapsible
               collapsed={this.state.collapsed}
             >
-              <div className="logo" />
-              <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                <Menu.Item key="1">
-                  <Link to={`/article`}>
-                    <Icon type="user" />
-                    <span>文章列表</span>
-                  </Link>
-                </Menu.Item>
-                <Menu.Item key="2">
-                  <Link to={`/editArticle`}>
-                    <Icon type="video-camera" />
-                    <span>编辑文章</span>
-                  </Link>
-                </Menu.Item>
-                <Menu.Item key="3">
-                  <Link to={`/tag`}>
-                    <Icon type="upload" />
-                    <span>标签</span>
-                  </Link>
-                </Menu.Item>
+              <div className="menu-logo">ADMIN</div>
+              <Menu theme="light" mode="inline" defaultSelectedKeys={['article']}
+                // selectedKeys={this.state.selectedKeys}
+              >
+                {
+                  menuList.map((menu, index) => (
+                    <Menu.Item key={menu.path}>
+                      <Link to={menu.path}>
+                        <Icon type={menu.icon} />
+                        <span>{menu.name}</span>
+                      </Link>
+                    </Menu.Item>
+                  ))
+                }
               </Menu>
             </Sider>
             <Layout>
@@ -57,7 +69,7 @@ export default class extends Component {
                   onClick={this.toggle}
                 />
               </Header>
-              <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280 }}>
+              <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: 280, height: '100%' }}>
                 <Routers />
               </Content>
             </Layout>

@@ -3,18 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm run start",
+    "dev": "PORT=4000 npm run start",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
+  "proxy": "http://127.0.0.1:80",
   "eslintConfig": {
     "extends": "react-app"
   },
   "dependencies": {
     "antd": "^3.10.3",
+    "axios": "^0.18.0",
     "babel-plugin-import": "^1.11.0",
+    "lodash": "^4.17.11",
+    "marked": "^0.5.2",
     "react": "^16.6.0",
     "react-app-rewired": "^1.6.2",
     "react-dom": "^16.6.0",

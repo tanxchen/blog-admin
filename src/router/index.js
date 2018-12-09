@@ -13,6 +13,7 @@ const routes = [
   { path: '/', exact: true, redirect: '/article' },
   { path: '/article', component: () => import(`@/views/Article`) },
   { path: '/editArticle', component: () => import(`@/views/EditArticle`) },
+  { path: '/editArticle/:id', component: () => import(`@/views/EditArticle`) },
   { path: '/tag', component: () => import(`@/views/Tag`) },
   // { path: '/rydemo', component: () => import(`@/views/Rydemo`) },
   // { path: '/detail/:id', component: () => import(`@/views/Detail`) },

@@ -1,68 +1,88 @@
 import React, { Component } from 'react'
-import { Table, Divider, Tag, Button } from 'antd';
+import { Link } from 'react-router-dom'
+import { Table, Divider, Button } from 'antd';
 
-const columns = [{
-  title: 'Title',
-  dataIndex: 'name',
-  key: 'name',
-  render: text => <span >{text}</span>,
-}, {
-  title: 'Age',
-  dataIndex: 'age',
-  key: 'age',
-}, {
-  title: 'Address',
-  dataIndex: 'address',
-  key: 'address',
-}, {
-  title: 'Tags',
-  key: 'tags',
-  dataIndex: 'tags',
-  render: tags => (
-    <span>
-      {tags.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
-    </span>
-  ),
-}, {
-  title: 'Action',
-  key: 'action',
-  render: (text, record) => (
-    <span>
-      <span >Invite {record.name}</span>
-      <Divider type="vertical" />
-      <span >Delete</span>
-    </span>
-  ),
-}];
-
-const data = [{
-  key: '1',
-  name: 'John Brown',
-  age: 32,
-  address: 'New York No. 1 Lake Park',
-  tags: ['nice', 'developer'],
-}, {
-  key: '2',
-  name: 'Jim Green',
-  age: 42,
-  address: 'London No. 1 Lake Park',
-  tags: ['loser'],
-}, {
-  key: '3',
-  name: 'Joe Black',
-  age: 32,
-  address: 'Sidney No. 1 Lake Park',
-  tags: ['cool', 'teacher'],
-}];
+function code2html (code) {
+  return {__html: code}
+}
 
 export default class extends Component {
+  constructor() {
+    super()
+    this.columns = [{
+      title: '标题',
+      dataIndex: 'title',
+      key: 'title',
+      align: 'center'
+    }, {
+      title: '标签',
+      dataIndex: 'label',
+      key: 'label',
+      align: 'center'
+    }, {
+      title: '内容',
+      dataIndex: 'content',
+      key: 'content',
+      align: 'center',
+      render: code => (
+        <div dangerouslySetInnerHTML={code2html(code)}></div>
+      )
+    }, {
+      title: '创建日期',
+      key: 'createDate',
+      align: 'center',
+      dataIndex: 'meta.createAt'
+    }, {
+      title: '修改日期',
+      key: 'updateDate',
+      align: 'center',
+      dataIndex: 'meta.updateAt'
+    }, {
+      title: '操作',
+      key: 'action',
+      align: 'center',
+      dataIndex: 'action',
+      render: (text, record) => (
+        <span>
+          <Button type="dashed" size="small" onClick={() => this.editHandle(record)}>修改</Button>
+          <Divider type="vertical" />
+          <Button type="danger" size="small">删除</Button>
+        </span>
+      ),
+    }]
+  }
+  state = {
+    data: []
+  }
+
+  componentDidMount () {
+    window.$http.get('/api/articles')
+      .then(res => {
+        console.log(res);
+        this.setState({
+          data: res
+        })
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }
+
+  editHandle (record) {
+    console.log('editHandle:', record);
+    window.sessionStorage.setItem('ADMIN_ARTICLE', JSON.stringify(record))
+    this.props.history.push('/editArticle?type=edit');
+  }
+
   render () {
     return (
       <div>
         <p style={{marginBottom: '20px'}}>
-          <Button type="primary" icon="plus">新增</Button>
+          <Link to="/editArticle?type=add">
+            <Button type="primary" icon="plus">新增</Button>
+          </Link>
         </p>
-        <Table columns={columns} dataSource={data} bordered/>
+        <Table columns={this.columns} dataSource={this.state.data} rowKey="_id" bordered/>
       </div>
     )
   }
