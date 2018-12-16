@@ -37,7 +37,10 @@ export default class extends Component {
   state = {
     data: [],
     modalVisible: false,
-    tagInputName: ''
+    modalVisibleOfEdit: false,
+    tagInputName: '',
+    tagInputNameOfEdit: '',
+    editId: ''
   }
 
   componentDidMount () {
@@ -55,6 +58,11 @@ export default class extends Component {
 
   editHandle (record) {
     console.log('editHandle:', record);
+    this.setState({
+      editId: record._id,
+      tagInputNameOfEdit: record.name,
+      modalVisibleOfEdit: true
+    })
   }
 
   removeHandle (record) {
@@ -95,16 +103,42 @@ export default class extends Component {
       })
   }
 
-  setModalVisible (visible) {
-    this.setState({
-      modalVisible: visible
+  submitEditTag = () => {
+    if (!this.state.tagInputNameOfEdit) {
+      return alert('标签名称不能为空！')
+    }
+    window.$http.post('/api/updateTagById', {
+      id: this.state.editId,
+      name: this.state.tagInputNameOfEdit
     })
+      .then(res => {
+        console.log(res);
+        this.setState({
+          data: res
+        })
+        message.success('修改成功！');
+      })
+      .catch((e) => {
+        console.log(e);
+      })
   }
 
-  iptChange = (event) => {
-    this.setState({
-      tagInputName: event.target.value
-    })
+  setModalVisible (visible, isEdit) {
+    this.setState(
+      isEdit
+        ? { modalVisibleOfEdit: visible }
+        : ( visible
+            ? { tagInputName: '', modalVisible: visible }
+            : { modalVisible: visible } )
+    )
+  }
+
+  iptChange = (event, isEdit) => {
+    this.setState(
+      isEdit
+        ? { tagInputNameOfEdit: event.target.value }
+        : { tagInputName: event.target.value }
+    )
   }
 
   render () {
@@ -129,6 +163,25 @@ export default class extends Component {
               placeholder="请输入标签名称"
               value={this.state.tagInputName}
               onChange={this.iptChange}
+              style={{ width: 200 }}
+            />
+          </div>
+        </Modal>
+        <Modal
+          title="修改标签"
+          okText="确定"
+          cancelText="取消"
+          maskClosable={false}
+          destroyOnClose
+          visible={this.state.modalVisibleOfEdit}
+          onOk={this.submitEditTag}
+          onCancel={() => this.setModalVisible(false, 'isEdit')}
+        >
+          <div style={{ textAlign: 'center' }}>
+            标签名称：<Input
+              placeholder="请输入标签名称"
+              value={this.state.tagInputNameOfEdit}
+              onChange={(event) => this.iptChange(event, 'isEdit')}
               style={{ width: 200 }}
             />
           </div>

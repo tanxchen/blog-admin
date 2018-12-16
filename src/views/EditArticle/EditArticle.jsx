@@ -1,18 +1,52 @@
 import React, { Component } from 'react'
-import marked from 'marked'
+// import marked from 'marked'
 import { Input, Button, Checkbox } from 'antd';
+
+const prism = require('prismjs')
+
+function wrap(code, lang) {
+  return `<pre v-pre class="language-${lang}"><code>${code}</code></pre>`
+}
+
+const highlightjs = (str, lang) => {
+  if (!lang) {
+    return wrap(str, 'text')
+  }
+  const rawLang = lang
+  if (lang === 'vue' || lang === 'html') {
+    lang = 'markup'
+  }
+  if (lang === 'md') {
+    lang = 'markdown'
+  }
+  if (prism.languages[lang]) {
+    const code = prism.highlight(str, prism.languages[lang], lang)
+    return wrap(code, rawLang)
+  }
+  return wrap(str, 'text')
+}
 
 const CheckboxGroup = Checkbox.Group;
 
+const markdown = require('markdown-it')({
+  html: true,
+  typographer: true,
+  highlight: highlightjs
+})
+
 // import debounce from 'lodash/debounce'
 // import _ from 'lodash'
+let editer = null
 
 export default class extends Component {
   state = {
     input: '# hello',
     compiledMarkdown: '',
     type: '',
-    tagList: []
+    tagList: [],
+    textareaHeight: 500,
+    isShowLeft: true,
+    isShowRight: true
   }
 
   componentDidMount () {
@@ -32,18 +66,24 @@ export default class extends Component {
     }
     this.md2code()
     this.getTagList()
+    editer = document.getElementById('editer')
+    this.setState({
+      textareaHeight: editer.scrollTop + editer.scrollHeight + 20
+    })
   }
 
   changeText = (event) => {
     this.setState({
-      input: event.target.value
+      input: event.target.value,
+      textareaHeight: editer.scrollTop + editer.scrollHeight
     })
     this.md2code()
   }
 
   md2code () {
     this.setState(prevState => ({
-      compiledMarkdown: marked(prevState.input, { sanitize: true })
+      compiledMarkdown: markdown.render(prevState.input)
+      // marked(prevState.input, { sanitize: true })
     }))
   }
 
@@ -76,14 +116,27 @@ export default class extends Component {
         <div className="mgb20">
           <div className="mgb20 sbtn">
             <label>标题：<Input placeholder="请输入标题" /></label>
-            <Button type="primary" icon="plus">发布</Button>
+            <div style={{display: 'inline-block', textAlign: 'right'}}>
+              <Button style={{marginRight: '6px'}} size={'small'} onClick={() => this.setState({ isShowRight: false })}>只显示markdown</Button>
+              <Button style={{ marginRight: '6px' }} size={'small'} onClick={() => this.setState({ isShowLeft: false })}>只显示文章最终内容</Button>
+              <Button style={{ marginRight: '6px' }} size={'small'} type="dashed" onClick={() => this.setState({ isShowLeft: true, isShowRight: true })}>显示全部</Button>
+              <Button type="primary" icon="plus">发布</Button>
+            </div>
           </div>
           <div>
             标签：<CheckboxGroup options={this.state.tagList} defaultValue={[]} onChange={this.onTagChange} />
           </div>
         </div>
-        <textarea value={this.state.input} onChange={this.changeText}></textarea>
-        <div className="code" dangerouslySetInnerHTML={code2html(this.state.compiledMarkdown)}></div>
+        {
+          this.state.isShowLeft
+            ? <textarea id="editer" style={{ height: this.state.textareaHeight + 'px', width: !this.state.isShowRight ? '100%' : ''}} value={this.state.input} onChange={this.changeText}></textarea>
+            : null
+        }
+        {
+          this.state.isShowRight
+            ? <div style={{ width: !this.state.isShowLeft ? '100%' : ''}} className="code content" dangerouslySetInnerHTML={code2html(this.state.compiledMarkdown)}></div>
+            : null
+        }
       </div>
     )
   }

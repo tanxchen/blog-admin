@@ -10,7 +10,6 @@
 textarea, #editor .code
   display: inline-block
   width: 49%
-  height: calc(100% - 56px)
   vertical-align: top
   box-sizing: border-box
   padding: 0 20px
@@ -27,5 +26,86 @@ textarea
   border: 1px solid #e5e5e5
 
 .code
-  color: #f66
+  min-height: 520px
   border: 1px solid #e5e5e5
+
+.content
+  h1,h2,h3,h4,h5,h6
+    font-weight: 600
+    line-height: 1.25
+    margin-bottom: 16px
+    margin-top: 24px
+  h1,h2
+    border-bottom: 1px solid #eaecef
+    padding-bottom: .3em
+  h1
+    font-size: 2em
+  h2
+    font-size: 1.5em
+  a
+    background-color: rgba(27,31,35,.05)
+    border-radius: 3px
+    font-size: 85%
+    margin: 0
+    padding: .2em .4em
+  p
+    margin-bottom: 16px
+    margin-top: 0
+  blockquote
+    border-left: .25em solid #dfe2e5
+    color: #6a737d
+    padding: 0 1em
+  ul,li
+    margin: initial
+    padding: initial
+  ul
+    padding-left: 2em
+    margin-bottom: 16px
+    margin-top: 0
+  li
+    list-style: initial
+
+.content pre, .content pre[class*="language-"]
+  border: 1px #eaecef solid
+  background-color: #f6f8fa
+  padding: 10px 20px
+  border-radius: 4px
+  font-size: 85%
+  line-height: 1.45
+  overflow: auto
+
+.token.selector, .token.important, .token.atrule, .token.keyword, .token.builtin
+  color: #E91E63
+
+.content pre code, .content pre[class*="language-"] code
+  color: #525252
+
+.token.string, .token.char, .token.attr-value, .token.regex, .token.variable
+  color: #389d70
+
+.token.punctuation
+  color: #2973b7
+
+.token.boolean, .token.number, .token.function
+  color: #e96900
+
+.token.comment, .token.block-comment, .token.prolog, .token.doctype, .token.cdata
+  color: #b3b3b3
+
+.token.operator, .token.entity, .token.url
+  color: #cd6767
+
+.token.tag
+  color: #3ca0e6
+
+.token.attr-name, .token.namespace, .token.deleted
+  color: #fc9153
+
+.token.punctuation
+  color: #666666
+
+.token.string, .token.char, .token.attr-value, .token.regex, .token.variable
+  color: #3fb374
+
+.token.property
+  color: #4a90e2
