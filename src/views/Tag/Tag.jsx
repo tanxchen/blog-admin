@@ -46,10 +46,7 @@ export default class extends Component {
   componentDidMount () {
     window.$http.get('/api/tags')
       .then(res => {
-        console.log(res);
-        this.setState({
-          data: res
-        })
+        this.setState({ data: res })
       })
       .catch((e) => {
         console.log(e);
@@ -57,7 +54,6 @@ export default class extends Component {
   }
 
   editHandle (record) {
-    console.log('editHandle:', record);
     this.setState({
       editId: record._id,
       tagInputNameOfEdit: record.name,
@@ -66,35 +62,33 @@ export default class extends Component {
   }
 
   removeHandle (record) {
-    console.log('removeHandle:', record);
-    window.$http.post('/api/removeTagById', {
-      id: record._id
-    })
-      .then(res => {
-        console.log(res);
-        this.setState({
-          data: res
-        })
-        message.success('删除成功！');
-      })
-      .catch((e) => {
-        console.log(e);
-      })
+    Modal.confirm({
+      title: '系统提示',
+      content: `确定删除${record.name}标签吗？`,
+      okType: 'danger',
+      okText: '确定',
+      cancelText: '取消',
+      onOk: () => {
+        window.$http.post('/api/removeTagById', { id: record._id })
+          .then(res => {
+            this.setState({ data: res })
+            message.success('删除成功！');
+          })
+          .catch((e) => {
+            console.log(e);
+          })
+      }
+    });
   }
 
   submitAddTag = () => {
-    if (!this.state.tagInputName) {
-      return alert('标签名称不能为空！')
-    }
+    if (!this.state.tagInputName) return alert('标签名称不能为空！')
+
     window.$http.post('/api/addTag', {
       name: this.state.tagInputName
     })
       .then(res => {
-        console.log(res);
-        this.setState({
-          data: res,
-          tagInputName: ''
-        })
+        this.setState({ data: res, tagInputName: '' })
         message.success('新增成功！');
         this.setModalVisible(false)
       })
@@ -104,18 +98,14 @@ export default class extends Component {
   }
 
   submitEditTag = () => {
-    if (!this.state.tagInputNameOfEdit) {
-      return alert('标签名称不能为空！')
-    }
+    if (!this.state.tagInputNameOfEdit) return alert('标签名称不能为空！')
+
     window.$http.post('/api/updateTagById', {
       id: this.state.editId,
       name: this.state.tagInputNameOfEdit
     })
       .then(res => {
-        console.log(res);
-        this.setState({
-          data: res
-        })
+        this.setState({ data: res })
         message.success('修改成功！');
       })
       .catch((e) => {

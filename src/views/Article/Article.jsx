@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Table, Divider, Button } from 'antd';
+import { Table, Divider, Button, Modal, message } from 'antd';
 
 function code2html (code) {
   return {__html: code}
@@ -16,16 +16,23 @@ export default class extends Component {
       align: 'center'
     }, {
       title: '标签',
-      dataIndex: 'label',
-      key: 'label',
-      align: 'center'
+      dataIndex: 'tags',
+      key: 'tags',
+      align: 'center',
+      render: tags => (
+        tags.map((tag, index) => (
+          <span key={index}>{tag}{
+            index + 1 !== tags.length ? <span>、</span> : null
+          }</span>
+        ))
+      )
     }, {
       title: '内容',
       dataIndex: 'content',
       key: 'content',
       align: 'center',
       render: code => (
-        <div dangerouslySetInnerHTML={code2html(code)}></div>
+        <div dangerouslySetInnerHTML={code2html(code)} className="markdown-content"></div>
       )
     }, {
       title: '创建日期',
@@ -46,7 +53,7 @@ export default class extends Component {
         <span>
           <Button type="dashed" size="small" onClick={() => this.editHandle(record)}>修改</Button>
           <Divider type="vertical" />
-          <Button type="danger" size="small">删除</Button>
+          <Button type="danger" size="small" onClick={() => this.removeHandle(record)}>删除</Button>
         </span>
       ),
     }]
@@ -58,7 +65,6 @@ export default class extends Component {
   componentDidMount () {
     window.$http.get('/api/articles')
       .then(res => {
-        console.log(res);
         this.setState({
           data: res
         })
@@ -68,8 +74,27 @@ export default class extends Component {
       })
   }
 
+  removeHandle (record) {
+    Modal.confirm({
+      title: '系统提示',
+      content: `确定删除该文章吗？`,
+      okType: 'danger',
+      okText: '确定',
+      cancelText: '取消',
+      onOk: () => {
+        window.$http.post('/api/removeArticleById', { id: record._id })
+          .then(res => {
+            this.setState({ data: res })
+            message.success('删除成功！');
+          })
+          .catch((e) => {
+            console.log(e);
+          })
+      }
+    });
+  }
+
   editHandle (record) {
-    console.log('editHandle:', record);
     window.sessionStorage.setItem('ADMIN_ARTICLE', JSON.stringify(record))
     this.props.history.push('/editArticle?type=edit');
   }

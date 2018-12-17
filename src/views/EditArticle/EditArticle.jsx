@@ -1,38 +1,8 @@
 import React, { Component } from 'react'
-// import marked from 'marked'
-import { Input, Button, Checkbox } from 'antd';
-
-const prism = require('prismjs')
-
-function wrap(code, lang) {
-  return `<pre v-pre class="language-${lang}"><code>${code}</code></pre>`
-}
-
-const highlightjs = (str, lang) => {
-  if (!lang) {
-    return wrap(str, 'text')
-  }
-  const rawLang = lang
-  if (lang === 'vue' || lang === 'html') {
-    lang = 'markup'
-  }
-  if (lang === 'md') {
-    lang = 'markdown'
-  }
-  if (prism.languages[lang]) {
-    const code = prism.highlight(str, prism.languages[lang], lang)
-    return wrap(code, rawLang)
-  }
-  return wrap(str, 'text')
-}
+import { Input, Button, Checkbox, message, Modal } from 'antd';
+import markdown from './markdown'
 
 const CheckboxGroup = Checkbox.Group;
-
-const markdown = require('markdown-it')({
-  html: true,
-  typographer: true,
-  highlight: highlightjs
-})
 
 // import debounce from 'lodash/debounce'
 // import _ from 'lodash'
@@ -40,13 +10,15 @@ let editer = null
 
 export default class extends Component {
   state = {
+    inputTitle: '',
     input: '# hello',
     compiledMarkdown: '',
     type: '',
     tagList: [],
     textareaHeight: 500,
     isShowLeft: true,
-    isShowRight: true
+    isShowRight: true,
+    activeTags: []
   }
 
   componentDidMount () {
@@ -61,7 +33,10 @@ export default class extends Component {
         content = JSON.parse(_c).content
       }
       this.setState({
-        input: content
+        input: content,
+        inputTitle: JSON.parse(_c).title,
+        activeTags: JSON.parse(_c).tags,
+        editId: JSON.parse(_c)._id
       })
     }
     this.md2code()
@@ -83,24 +58,78 @@ export default class extends Component {
   md2code () {
     this.setState(prevState => ({
       compiledMarkdown: markdown.render(prevState.input)
-      // marked(prevState.input, { sanitize: true })
     }))
   }
 
   onTagChange = (checkedValues) => {
-    console.log('checked = ', checkedValues);
+    this.setState({
+      activeTags: checkedValues
+    })
+  }
+
+  titleChange = (event) => {
+    this.setState({
+      inputTitle: event.target.value
+    })
   }
 
   getTagList = () => {
     window.$http.get('/api/tags')
       .then(res => {
-        console.log(res);
         res.forEach(element => {
           element.label = element.value = element.name
         });
         this.setState({
           tagList: res
         })
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }
+
+  publish = () => {
+    if (!this.state.inputTitle) return message.warning('请输入文章标题');
+    if (!this.state.input) return message.warning('请输入文章内容');
+
+    Modal.confirm({
+      title: '系统提示',
+      content: this.state.editId ? `确定发布id为：${this.state.editId}的文章吗？` : '确定发布这篇新文章吗？',
+      okText: '确定',
+      cancelText: '取消',
+      onOk: () => {
+        !this.state.editId ? this.addActicle() : this.editActicle()
+      }
+    });
+  }
+
+  addActicle = () => {
+    window.$http.post('/api/addArticle', {
+      title: this.state.inputTitle,
+      tags: this.state.activeTags,
+      content: this.state.input
+    })
+      .then(res => {
+        if (res.success === 100) {
+          message.success('发布成功！');
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }
+
+  editActicle = () => {
+    window.$http.post('/api/editArticle', {
+      title: this.state.inputTitle,
+      tags: this.state.activeTags,
+      content: this.state.input,
+      id: this.state.editId
+    })
+      .then(res => {
+        if (res.success === 100) {
+          message.success('发布成功！');
+        }
       })
       .catch((e) => {
         console.log(e);
@@ -115,28 +144,46 @@ export default class extends Component {
       <div id="editor">
         <div className="mgb20">
           <div className="mgb20 sbtn">
-            <label>标题：<Input placeholder="请输入标题" /></label>
+            <label>标题：<Input placeholder="请输入标题" value={this.state.inputTitle} onChange={this.titleChange}/></label>
             <div style={{display: 'inline-block', textAlign: 'right'}}>
-              <Button style={{marginRight: '6px'}} size={'small'} onClick={() => this.setState({ isShowRight: false })}>只显示markdown</Button>
-              <Button style={{ marginRight: '6px' }} size={'small'} onClick={() => this.setState({ isShowLeft: false })}>只显示文章最终内容</Button>
-              <Button style={{ marginRight: '6px' }} size={'small'} type="dashed" onClick={() => this.setState({ isShowLeft: true, isShowRight: true })}>显示全部</Button>
-              <Button type="primary" icon="plus">发布</Button>
+              <Button
+                style={{ marginRight: '6px' }}
+                size={'small'}
+                onClick={() => this.setState({ isShowRight: !this.state.isShowRight })}
+              >toggle left</Button>
+              <Button
+                style={{ marginRight: '6px' }}
+                size={'small'}
+                onClick={() => this.setState({ isShowLeft: !this.state.isShowLeft })}
+              >toggle right</Button>
+              <Button type="primary" icon="plus" onClick={this.publish}>发布</Button>
             </div>
           </div>
           <div>
-            标签：<CheckboxGroup options={this.state.tagList} defaultValue={[]} onChange={this.onTagChange} />
+            标签：<CheckboxGroup
+              options={this.state.tagList}
+              value={this.state.activeTags}
+              onChange={this.onTagChange}/>
           </div>
         </div>
-        {
-          this.state.isShowLeft
-            ? <textarea id="editer" style={{ height: this.state.textareaHeight + 'px', width: !this.state.isShowRight ? '100%' : ''}} value={this.state.input} onChange={this.changeText}></textarea>
-            : null
-        }
-        {
-          this.state.isShowRight
-            ? <div style={{ width: !this.state.isShowLeft ? '100%' : ''}} className="code content" dangerouslySetInnerHTML={code2html(this.state.compiledMarkdown)}></div>
-            : null
-        }
+        <textarea
+          id="editer"
+          style={{
+            height: this.state.textareaHeight + 'px',
+            width: !this.state.isShowRight ? '100%' : '',
+            display: this.state.isShowLeft ? 'inline-block' : 'none'
+          }}
+          value={this.state.input}
+          onChange={this.changeText}
+        ></textarea>
+        <div
+          style={{
+            width: !this.state.isShowLeft ? '100%' : '',
+            display: this.state.isShowRight ? 'inline-block' : 'none'
+          }}
+          className="code content"
+          dangerouslySetInnerHTML={code2html(this.state.compiledMarkdown)}
+        ></div>
       </div>
     )
   }

@@ -9,17 +9,17 @@ const { Header, Sider, Content } = Layout;
 const menuList = [
   {
     path: 'article',
-    icon: 'user',
+    icon: 'file-text',
     name: '文章列表'
   },
   {
     path: 'editArticle',
-    icon: 'video-camera',
+    icon: 'edit',
     name: '编辑文章'
   },
   {
     path: 'tag',
-    icon: 'upload',
+    icon: 'tags',
     name: '标签'
   }
 ]
