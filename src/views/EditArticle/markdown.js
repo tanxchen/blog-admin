@@ -1,7 +1,7 @@
 const prism = require('prismjs')
 
 function wrap(code, lang) {
-  return `<pre v-pre class="language-${lang}"><code>${code}</code></pre>`
+  return `<pre class="language-${lang}"><code>${code}</code></pre>`
 }
 
 function highlight (str, lang) {
