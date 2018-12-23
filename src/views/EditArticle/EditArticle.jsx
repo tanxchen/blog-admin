@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import { Input, Button, Checkbox, message, Modal } from 'antd';
 import markdown from './markdown'
 
-const CheckboxGroup = Checkbox.Group;
-
 // import debounce from 'lodash/debounce'
 // import _ from 'lodash'
 let editer = null
@@ -160,7 +158,7 @@ export default class extends Component {
             </div>
           </div>
           <div>
-            标签：<CheckboxGroup
+            标签：<Checkbox.Group
               options={this.state.tagList}
               value={this.state.activeTags}
               onChange={this.onTagChange}/>

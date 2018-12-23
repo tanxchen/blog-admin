@@ -1,40 +1,35 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
 
 class NormalLoginForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
+      // password: "2"
+      // remember: false
+      // userName: "2"
       if (!err) {
-        console.log('Received values of form: ', values, this.props);
-        // password: "2"
-        // remember: false
-        // userName: "2"
-        // if (values.userName === 'blog-admin' && values.password === '1234') {
-        this.props.history.push('/home')
-        // }
+        this.loginHandle({
+          userName: values.userName,
+          password: values.password
+        })
       }
     });
   }
 
-  validatorUserName = (rule, value, callback) => {
-    // const form = this.props.form;
-    // form.getFieldValue('password')
-    if (value && value !== 'blog-admin') {
-      callback('用户名不正确');
-    } else {
-      callback();
-    }
-  }
-
-  validatorPassword = (rule, value, callback) => {
-    // const form = this.props.form;
-    // form.getFieldValue('password')
-    if (value && value !== '1234') {
-      callback('密码不正确');
-    } else {
-      callback();
-    }
+  loginHandle = (data) => {
+    window.$http.post('/api/login', data)
+      .then(res => {
+        if (res.success === 100) {
+          this.props.history.push('/home')
+          message.success('登录成功！');
+        } else {
+          message.error('用户名或密码不正确！');
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      })
   }
 
   render() {
@@ -44,10 +39,7 @@ class NormalLoginForm extends React.Component {
         <h2 className="title">Ryanx Chen&#x27; blog admin</h2>
         <Form.Item>
           {getFieldDecorator('userName', {
-            rules: [
-              { required: true, message: '请输入用户名' },
-              { validator: this.validatorUserName }
-            ],
+            rules: [{ required: true, message: '请输入用户名' }]
           })(
             <Input size="large" autoComplete="off" prefix={
               <Icon type="user" style={{ color: '#1890ff' }} />
@@ -56,10 +48,7 @@ class NormalLoginForm extends React.Component {
         </Form.Item>
         <Form.Item>
           {getFieldDecorator('password', {
-            rules: [
-              { required: true, message: '请输入密码' },
-              { validator: this.validatorPassword }
-            ],
+            rules: [{ required: true, message: '请输入密码' }]
           })(
             <Input size="large" autoComplete="off" prefix={
               <Icon type="lock" style={{ color: '#1890ff' }} />

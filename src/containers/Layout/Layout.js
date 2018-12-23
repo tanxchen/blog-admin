@@ -1,10 +1,11 @@
 import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch, Link } from 'react-router-dom';
-import { Layout, Menu, Icon } from 'antd';
+import { Layout, Menu, Icon, Button } from 'antd';
 // sidebar nav config
 import navigation from '../../_nav';
 // routes config
 import routes from '@/router';
+import './layout.sass'
 
 const { Header, Sider, Content } = Layout;
 // const DefaultAside = React.lazy(() => import('./DefaultAside'));
@@ -24,8 +25,7 @@ export default class extends Component {
 
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
-  signOut(e) {
-    e.preventDefault()
+  signOut = (e) => {
     this.props.history.push('/login')
   }
 
@@ -42,7 +42,9 @@ export default class extends Component {
             collapsible
             collapsed={this.state.collapsed}
           >
-            <Link to="/home"><div className="menu-logo">R</div></Link>
+            <Link to="/home">
+              <div className="menu-logo">R</div>
+            </Link>
             <Menu theme="light" mode="inline" defaultSelectedKeys={['article']}
             // selectedKeys={this.state.selectedKeys}
             >
@@ -59,12 +61,13 @@ export default class extends Component {
             </Menu>
           </Sider>
           <Layout>
-            <Header style={{ background: '#fff', padding: 0 }}>
+            <Header style={{ background: '#fff', padding: 0 }} className="content-header">
               <Icon
                 className="trigger"
                 type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                 onClick={this.toggle}
               />
+              <Button onClick={this.signOut} className="sign-out">退出</Button>
             </Header>
             <Content style={{ margin: '24px 16px', padding: 24, background: '#fff' }}>
               <Suspense fallback={this.loading()}>

@@ -6,8 +6,8 @@ import './App.sass';
 const loading = () => <div className="animated-loading">Loading...</div>;
 
 // Containers
-const DefaultLayout = Loadable({
-  loader: () => import('./containers/DefaultLayout'),
+const Layout = Loadable({
+  loader: () => import('./containers/Layout'),
   loading
 });
 
@@ -42,7 +42,7 @@ export default class extends Component {
           {/* <Route exact path="/404" name="Page 404" component={Page404} /> */}
           {/* <Route exact path="/500" name="Page 500" component={Page500} /> */}
           <Redirect exact from="/" to="/login" />
-          <Route path="/home" name="Home" component={DefaultLayout} />
+          <Route path="/home" name="Home" component={Layout} />
           <Route path="*" name="not-found" component={Page404} />
         </Switch>
       </HashRouter>
