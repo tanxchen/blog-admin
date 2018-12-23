@@ -96,14 +96,14 @@ export default class extends Component {
 
   editHandle (record) {
     window.sessionStorage.setItem('ADMIN_ARTICLE', JSON.stringify(record))
-    this.props.history.push('/editArticle?type=edit');
+    this.props.history.push('/home/editArticle?type=edit');
   }
 
   render () {
     return (
       <div>
         <p style={{marginBottom: '20px'}}>
-          <Link to="/editArticle?type=add">
+          <Link to="/home/editArticle?type=add">
             <Button type="primary" icon="plus">新增</Button>
           </Link>
         </p>
