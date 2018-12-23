@@ -41,7 +41,7 @@ class NormalLoginForm extends React.Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <Form onSubmit={this.handleSubmit} className="login-form">
-        <h2 className="title">Ryanx Chen&#x27; back end of blog</h2>
+        <h2 className="title">Ryanx Chen&#x27; blog admin</h2>
         <Form.Item>
           {getFieldDecorator('userName', {
             rules: [

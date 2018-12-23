@@ -1,7 +1,7 @@
 {
-  "name": "back-end-of-blog",
+  "name": "blog-admin",
   "version": "0.1.0",
-  "description": "ryanxchen's back-end of blog built on React<create-react-app>,React-router-dom v4,ant design",
+  "description": "ryanxchen's blog admin built on React<create-react-app>,React-router-dom v4,ant design",
   "author": "ryanxchen <jsryanxchen@gmail.com>",
   "private": true,
   "scripts": {
