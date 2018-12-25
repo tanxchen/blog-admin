@@ -19,6 +19,7 @@
     "antd": "^3.10.3",
     "axios": "^0.18.0",
     "babel-plugin-import": "^1.11.0",
+    "classnames": "^2.2.6",
     "lodash": "^4.17.11",
     "markdown-it": "^8.4.2",
     "prismjs": "^1.15.0",
