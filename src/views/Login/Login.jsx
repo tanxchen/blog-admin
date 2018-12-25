@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button, Checkbox, message } from 'antd';
+import { Form, Icon, Input, Button, message } from 'antd';
+import classNames from 'classnames'
 
 class NormalLoginForm extends React.Component {
+  state = {
+    isShowGreeting: false,
+    isShowBlindfold: false
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -32,18 +38,42 @@ class NormalLoginForm extends React.Component {
       })
   }
 
+  inputOnFocus (type) {
+    this.setState({
+      [`isShow${type}`]: true
+    })
+  }
+
+  inputOnBlur(type) {
+    this.setState({
+      [`isShow${type}`]: false
+    })
+  }
+
   render() {
     const { getFieldDecorator } = this.props.form;
+    const classes = classNames('panfish', {
+      'show-greeting': this.state.isShowGreeting,
+      'show-blindfold': this.state.isShowBlindfold
+    })
     return (
       <Form onSubmit={this.handleSubmit} className="login-form">
-        <h2 className="title">Ryanx Chen&#x27; blog admin</h2>
+        <div className={classes}>
+          <div className="normal"></div>
+          <div className="greeting"></div>
+          <div className="blindfold"></div>
+        </div>
+        <h2 className="title">登录</h2>
         <Form.Item>
           {getFieldDecorator('userName', {
             rules: [{ required: true, message: '请输入用户名' }]
           })(
             <Input size="large" autoComplete="off" prefix={
               <Icon type="user" style={{ color: '#1890ff' }} />
-            } placeholder="请输入用户名" />
+            } placeholder="请输入用户名"
+              onFocus={() => this.inputOnFocus('Greeting')}
+              onBlur={() => this.inputOnBlur('Greeting')}
+            />
           )}
         </Form.Item>
         <Form.Item>
@@ -52,15 +82,18 @@ class NormalLoginForm extends React.Component {
           })(
             <Input size="large" autoComplete="off" prefix={
               <Icon type="lock" style={{ color: '#1890ff' }} />
-            } type="password" placeholder="请输入密码" />
+            } type="password" placeholder="请输入密码"
+              onFocus={() => this.inputOnFocus('Blindfold')}
+              onBlur={() => this.inputOnBlur('Blindfold')}
+            />
           )}
         </Form.Item>
-        {getFieldDecorator('remember', {
+        {/* {getFieldDecorator('remember', {
           valuePropName: 'checked',
           initialValue: true,
         })(
           <Checkbox style={{ marginBottom: '20px' }}>记住我</Checkbox>
-        )}
+        )} */}
         {/* <Form.Item> */}
           {/* <a className="login-form-forgot" href="www.baidu.com">Forgot password</a> */}
           {/* Or <a href="www.baidu.com">register now!</a> */}

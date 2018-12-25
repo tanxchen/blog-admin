@@ -7,22 +7,69 @@
   display: flex
   align-items: center
   justify-content: center
+  font-size: 10px
   .login-form
-    width: 380px
-    height: 380px
-    display: flex
-    justify-content: center
-    flex-direction: column
-    background-color: #ffffff
-    // border: 1px solid #e5e5e5
-    padding: 20px 20px 10px
-    border-radius: 8px
+    // width: 380px
+    // height: 380px
+    // display: flex
+    // justify-content: center
+    // flex-direction: column
+    // background-color: #ffffff
+    // // border: 1px solid #e5e5e5
+    // padding: 20px 20px 10px
+    // border-radius: 8px
     // box-shadow: 0 0 12px #e5e5e5
+    position: relative
+    padding: 2em
+    width: 26.5em
+    max-width: 100%
+    font-size: 1.167em
+    background-color: #fff
+    border-radius: 2px
+    box-sizing: border-box
+    .ant-input,.ant-btn-lg
+      border-radius: 2px
   .title
-    text-align: center
-    margin-top: -20px
-    margin-bottom: 20px
+    // text-align: center
+    // margin-top: -20px
+    // margin-bottom: 20px
+    font-size: 1.5em
+    margin: 0 0 1.714em
   .login-form-forgot
     float: right
   .login-form-button
     width: 100%
+  .panfish
+    font-size: 10px
+    &.show-greeting
+      .greeting
+        display: block
+      .normal
+        display: none
+    &.show-blindfold
+      .blindfold
+        display: block
+      .normal
+        display: none
+    .normal,.greeting,.blindfold
+      position: absolute
+      top: 0
+      left: 50%
+      width: 10em
+      height: 8em
+      z-index: 1
+    .normal
+      transform: translate(-50%,-83%)
+      background: url('../../assets/images/normal.png') no-repeat 0 0/contain
+      display: block
+    .greeting
+      width: 12em
+      height: 9.8em
+      transform: translate(-50%,-75.8%)
+      background: url('../../assets/images/greeting.png') no-repeat 0 0/contain
+      display: none
+    .blindfold
+      width: 9em
+      transform: translate(-50%,-68%)
+      background: url('../../assets/images/blindfold.png') no-repeat 0 0/contain
+      display: none
