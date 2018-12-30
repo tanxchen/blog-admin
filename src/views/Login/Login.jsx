@@ -69,7 +69,7 @@ class NormalLoginForm extends React.Component {
             rules: [{ required: true, message: '请输入用户名' }]
           })(
             <Input size="large" autoComplete="off" prefix={
-              <Icon type="user" style={{ color: '#1890ff' }} />
+              <Icon type="user" style={{ color: '#bbb' }} />
             } placeholder="请输入用户名"
               onFocus={() => this.inputOnFocus('Greeting')}
               onBlur={() => this.inputOnBlur('Greeting')}
@@ -81,7 +81,7 @@ class NormalLoginForm extends React.Component {
             rules: [{ required: true, message: '请输入密码' }]
           })(
             <Input size="large" autoComplete="off" prefix={
-              <Icon type="lock" style={{ color: '#1890ff' }} />
+              <Icon type="lock" style={{ color: '#bbb' }} />
             } type="password" placeholder="请输入密码"
               onFocus={() => this.inputOnFocus('Blindfold')}
               onBlur={() => this.inputOnBlur('Blindfold')}
