@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Table, Divider, Button, Modal, message } from 'antd';
+import $http from '@/axios'
 
 function code2html (code) {
   return {__html: code}
 }
 
 export default class extends Component {
-  constructor() {
+  constructor(props, context) {
     super()
     this.columns = [{
       title: '标题',
@@ -63,7 +64,7 @@ export default class extends Component {
   }
 
   componentDidMount () {
-    window.$http.get('/api/articles')
+    $http.get('/api/articles')
       .then(res => {
         this.setState({
           data: res
@@ -82,7 +83,7 @@ export default class extends Component {
       okText: '确定',
       cancelText: '取消',
       onOk: () => {
-        window.$http.post('/api/removeArticleById', { id: record._id })
+        $http.post('/api/removeArticleById', { id: record._id })
           .then(res => {
             this.setState({ data: res })
             message.success('删除成功！');

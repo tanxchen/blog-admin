@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Input, Button, Checkbox, message, Modal } from 'antd';
 import markdown from './markdown'
+import $http from '@/axios'
 
 // import debounce from 'lodash/debounce'
 // import _ from 'lodash'
@@ -72,7 +73,7 @@ export default class extends Component {
   }
 
   getTagList = () => {
-    window.$http.get('/api/tags')
+    $http.get('/api/tags')
       .then(res => {
         res.forEach(element => {
           element.label = element.value = element.name
@@ -102,7 +103,7 @@ export default class extends Component {
   }
 
   addActicle = () => {
-    window.$http.post('/api/addArticle', {
+    $http.post('/api/addArticle', {
       title: this.state.inputTitle,
       tags: this.state.activeTags,
       content: this.state.input
@@ -118,7 +119,7 @@ export default class extends Component {
   }
 
   editActicle = () => {
-    window.$http.post('/api/editArticle', {
+    $http.post('/api/editArticle', {
       title: this.state.inputTitle,
       tags: this.state.activeTags,
       content: this.state.input,

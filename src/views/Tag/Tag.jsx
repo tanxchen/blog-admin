@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Table, Divider, Button, Modal, Input, message } from 'antd';
+import $http from '@/axios'
 
 export default class extends Component {
   constructor() {
@@ -44,7 +45,7 @@ export default class extends Component {
   }
 
   componentDidMount () {
-    window.$http.get('/api/tags')
+    $http.get('/api/tags')
       .then(res => {
         this.setState({ data: res })
       })
@@ -69,7 +70,7 @@ export default class extends Component {
       okText: '确定',
       cancelText: '取消',
       onOk: () => {
-        window.$http.post('/api/removeTagById', { id: record._id })
+        $http.post('/api/removeTagById', { id: record._id })
           .then(res => {
             this.setState({ data: res })
             message.success('删除成功！');
@@ -84,7 +85,7 @@ export default class extends Component {
   submitAddTag = () => {
     if (!this.state.tagInputName) return alert('标签名称不能为空！')
 
-    window.$http.post('/api/addTag', {
+    $http.post('/api/addTag', {
       name: this.state.tagInputName
     })
       .then(res => {
@@ -100,7 +101,7 @@ export default class extends Component {
   submitEditTag = () => {
     if (!this.state.tagInputNameOfEdit) return alert('标签名称不能为空！')
 
-    window.$http.post('/api/updateTagById', {
+    $http.post('/api/updateTagById', {
       id: this.state.editId,
       name: this.state.tagInputNameOfEdit
     })

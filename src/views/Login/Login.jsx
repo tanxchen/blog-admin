@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Icon, Input, Button, message } from 'antd';
 import classNames from 'classnames'
+import $http from '@/axios'
 
 class NormalLoginForm extends React.Component {
   state = {
@@ -24,7 +25,7 @@ class NormalLoginForm extends React.Component {
   }
 
   loginHandle = (data) => {
-    window.$http.post('/api/login', data)
+    $http.post('/api/login', data)
       .then(res => {
         if (res.success === 100) {
           this.props.history.push('/home')

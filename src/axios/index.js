@@ -19,4 +19,4 @@ axiosInstance.interceptors.response.use(function (res) {
   return Promise.reject(error)
 })
 
-window.$http = axiosInstance
+export default axiosInstance
