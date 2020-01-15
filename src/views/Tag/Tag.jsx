@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
-import { Table, Divider, Button, Modal, Input, message } from 'antd';
+import { Table, Divider, Button, Modal, Input } from 'antd';
 import $http from '@/axios'
+/**
+ * fix: https://github.com/ant-design/ant-design/issues/14895
+ */
+require('antd/lib/button/style/css');
+const message = require('antd/lib/message').default;
 
 export default class extends Component {
   constructor() {

@@ -1,11 +1,20 @@
 import React, { Component } from 'react'
-import { Input, Button, Checkbox, message, Modal } from 'antd';
+import { Input, Button, Checkbox, Modal } from 'antd';
 import markdown from './markdown'
 import $http from '@/axios'
+/**
+ * fix: https://github.com/ant-design/ant-design/issues/14895
+ */
+require('antd/lib/button/style/css');
+const message = require('antd/lib/message').default;
 
 // import debounce from 'lodash/debounce'
 // import _ from 'lodash'
 let editer = null
+
+function code2html (content) {
+  return { __html: content }
+}
 
 export default class extends Component {
   state = {
@@ -136,9 +145,6 @@ export default class extends Component {
   }
 
   render () {
-    function code2html (content) {
-      return { __html: content }
-    }
     return (
       <div id="editor">
         <div className="mgb20">

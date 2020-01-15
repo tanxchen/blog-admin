@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button, message } from 'antd';
+import { Form, Icon, Input, Button } from 'antd';
 import classNames from 'classnames'
 import $http from '@/axios'
+/**
+ * fix: https://github.com/ant-design/ant-design/issues/14895
+ */
+require('antd/lib/button/style/css');
+const message = require('antd/lib/message').default;
 
 class NormalLoginForm extends React.Component {
   state = {

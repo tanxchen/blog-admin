@@ -7,13 +7,19 @@ const loading = () => <div className="animated-loading">Loading...</div>;
 
 // Containers
 const Layout = Loadable({
-  loader: () => import('./containers/Layout'),
+  loader: () => import(
+    /* webpackChunkName: 'layout' */
+    '@/Layout'
+  ),
   loading
 });
 
 // Pages
 const Login = Loadable({
-  loader: () => import('./views/Login'),
+  loader: () => import(
+    /* webpackChunkName: 'login' */
+    '@/views/Login'
+  ),
   loading
 });
 
@@ -23,7 +29,10 @@ const Login = Loadable({
 // });
 
 const Page404 = Loadable({
-  loader: () => import('./views/NotFound'),
+  loader: () => import(
+    /* webpackChunkName: 'page-404' */
+    '@/views/NotFound'
+  ),
   loading
 });
 

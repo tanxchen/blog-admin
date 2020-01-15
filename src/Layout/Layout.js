@@ -2,7 +2,7 @@ import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch, Link } from 'react-router-dom';
 import { Layout, Menu, Icon, Button } from 'antd';
 // sidebar nav config
-import navigation from '../../_nav';
+import navigation from '@/_nav';
 // routes config
 import routes from '@/router';
 import './layout.sass'
@@ -29,9 +29,9 @@ export default class extends Component {
     this.props.history.push('/login')
   }
 
-  componentDidMount () {
-    console.log(this.props.history.location.pathname);
-  }
+  // componentDidMount () {
+  //   console.log(this.props.history.location.pathname);
+  // }
 
   render() {
     return (
