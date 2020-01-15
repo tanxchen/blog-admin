@@ -1,4 +1,5 @@
-const prism = require('prismjs')
+import prism from 'prismjs'
+import markdownIt from 'markdown-it'
 
 function wrap(code, lang) {
   return `<pre class="language-${lang}"><code>${code}</code></pre>`
@@ -22,7 +23,7 @@ function highlight (str, lang) {
   return wrap(str, 'text')
 }
 
-export default require('markdown-it')({
+export default markdownIt({
   html: true,
   typographer: true,
   highlight
