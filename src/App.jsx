@@ -1,45 +1,43 @@
 import React, { Component } from 'react';
 import { HashRouter, Switch, Route, Redirect } from 'react-router-dom'
-import Loadable from '@loadable/component'
-import './App.sass';
+import baseLoadable from '@loadable/component'
+import '@/assets/styles/App.sass';
 
-const loading = (<div className="animated-loading">Loading...</div>);
+function loadable (f) {
+  return baseLoadable(f, {
+    fallback: (
+      <div className="loading-wrap">
+        <span className="animated-loading"></span>
+      </div>
+    )
+  })
+}
+
 
 // Containers
-const Layout = Loadable(
-  () => import(
-    /* webpackChunkName: 'layout' */
-    '@/Layout'
-  ),
-  { fallback: loading }
-);
+const Layout = loadable(() => import(
+  /* webpackChunkName: 'layout' */
+  '@/Layout'
+));
 
 // Pages
-const Login = Loadable(
-  () => import(
-    /* webpackChunkName: 'login' */
-    '@/views/Login'
-  ),
-  { fallback: loading }
-);
+const Login = loadable(() => import(
+  /* webpackChunkName: 'login' */
+  '@/views/Login'
+));
 
-// const Register = Loadable(
-//   () => import('./views/Pages/Register'),
-//   { fallback: loading }
-// );
+// const Register = loadable(() => import(
+//   './views/Pages/Register'
+// ));
 
-const Page404 = Loadable(
-  () => import(
-    /* webpackChunkName: 'page-404' */
-    '@/views/NotFound'
-  ),
-  { fallback: loading }
-);
+const Page404 = loadable(() => import(
+  /* webpackChunkName: 'page-404' */
+  '@/views/NotFound'
+));
 
-// const Page500 = Loadable({
-//   loader: () => import('./views/Pages/Page500'),
-//   { fallback: loading }
-// });
+// const Page500 = loadable(() => import(
+//   './views/Pages/Page500'
+// ));
 
 export default class extends Component {
   render () {

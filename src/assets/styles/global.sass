@@ -1,0 +1,23 @@
+@keyframes animationloading
+  0%
+    transform: rotate(0)
+
+  50%
+    transform: rotate(180deg)
+
+  to
+    transform: rotate(1turn)
+
+.loading-wrap
+  display: flex
+  align-items: center
+  justify-content: center
+  height: 100%
+.animated-loading
+  border: 3px solid #cccccc
+  border-bottom-color: transparent
+  border-radius: 50%
+  width: 20px
+  height: 20px
+  animation: animationloading .8s linear infinite
+  
