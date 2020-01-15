@@ -1,11 +1,16 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Table, Divider, Button, Modal } from 'antd';
+import {
+  Table,
+  Divider,
+  Button,
+  Modal
+} from 'antd';
 import $http from '@/axios'
 /**
  * fix: https://github.com/ant-design/ant-design/issues/14895
  */
-require('antd/lib/button/style/css');
+require('antd/lib/message/style');
 const message = require('antd/lib/message').default;
 
 function code2html (code) {

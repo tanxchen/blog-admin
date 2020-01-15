@@ -1,11 +1,16 @@
 import React, { Component } from 'react'
-import { Input, Button, Checkbox, Modal } from 'antd';
+import {
+  Input,
+  Button,
+  Checkbox,
+  Modal
+} from 'antd';
 import markdown from './markdown'
 import $http from '@/axios'
 /**
  * fix: https://github.com/ant-design/ant-design/issues/14895
  */
-require('antd/lib/button/style/css');
+require('antd/lib/message/style');
 const message = require('antd/lib/message').default;
 
 // import debounce from 'lodash/debounce'
