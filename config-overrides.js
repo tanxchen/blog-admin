@@ -10,7 +10,6 @@ const {
   addWebpackModuleRule,
   tap
 } = require('customize-cra');
-
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
 
 module.exports = {
@@ -107,7 +106,7 @@ function getModuleSassLoaderConfig() {
 
 function getSassLoaderConfig() {
   return {
-    test: /\.s[ac]ss$/i,
+    test: /\[^.module].s[ac]ss$/i,
     use: [
       'style-loader',
       {
