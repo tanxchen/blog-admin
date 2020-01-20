@@ -7,14 +7,13 @@ import {
 } from 'antd';
 import markdown from './markdown'
 import $http from '@/axios'
+import debounce from 'lodash/debounce'
 /**
  * fix: https://github.com/ant-design/ant-design/issues/14895
  */
 require('antd/lib/message/style');
 const message = require('antd/lib/message').default;
 
-// import debounce from 'lodash/debounce'
-// import _ from 'lodash'
 let editer = null
 
 function code2html (content) {
@@ -32,6 +31,11 @@ export default class extends Component {
     isShowLeft: true,
     isShowRight: true,
     activeTags: []
+  }
+
+  constructor (props) {
+    super(props)
+    this.emitChangeDebounced = debounce(this.emitChange, 400);
   }
 
   componentDidMount () {
@@ -60,12 +64,16 @@ export default class extends Component {
     })
   }
 
+  emitChange () {
+    this.md2code()
+  }
+
   changeText = (event) => {
     this.setState({
       input: event.target.value,
       textareaHeight: editer.scrollTop + editer.scrollHeight
     })
-    this.md2code()
+    this.emitChangeDebounced();
   }
 
   md2code () {
@@ -96,9 +104,7 @@ export default class extends Component {
           tagList: res
         })
       })
-      .catch((e) => {
-        console.log(e);
-      })
+      .catch((e) => console.log(e))
   }
 
   publish = () => {
@@ -127,9 +133,7 @@ export default class extends Component {
           message.success('发布成功！');
         }
       })
-      .catch((e) => {
-        console.log(e);
-      })
+      .catch((e) => console.log(e))
   }
 
   editActicle = () => {
@@ -144,9 +148,14 @@ export default class extends Component {
           message.success('发布成功！');
         }
       })
-      .catch((e) => {
-        console.log(e);
-      })
+      .catch((e) => console.log(e))
+  }
+
+  toggleShow = (e) => {
+    const type = e.target.dataset.type
+    this.setState({
+      [`isShow${type}`]: !this.state[`isShow${type}`]
+    })
   }
 
   render () {
@@ -154,17 +163,23 @@ export default class extends Component {
       <div id="editor">
         <div className="mgb20">
           <div className="mgb20 sbtn">
-            <label>标题：<Input placeholder="请输入标题" value={this.state.inputTitle} onChange={this.titleChange}/></label>
+            <label>标题：<Input placeholder="请输入标题"
+              value={this.state.inputTitle}
+              onChange={this.titleChange}
+              />
+            </label>
             <div style={{display: 'inline-block', textAlign: 'right'}}>
               <Button
                 style={{ marginRight: '6px' }}
                 size={'small'}
-                onClick={() => this.setState({ isShowRight: !this.state.isShowRight })}
+                data-type="Right"
+                onClick={this.toggleShow}
               >toggle left</Button>
               <Button
                 style={{ marginRight: '6px' }}
                 size={'small'}
-                onClick={() => this.setState({ isShowLeft: !this.state.isShowLeft })}
+                data-type="Left"
+                onClick={this.toggleShow}
               >toggle right</Button>
               <Button type="primary" icon="plus" onClick={this.publish}>发布</Button>
             </div>
