@@ -29,10 +29,6 @@ export default class extends Component {
     this.props.history.push('/login')
   }
 
-  // componentDidMount () {
-  //   console.log(this.props.history.location.pathname);
-  // }
-
   render() {
     return (
       <div className="App">
@@ -45,9 +41,12 @@ export default class extends Component {
             <Link to="/home">
               <div className="menu-logo">R</div>
             </Link>
-            <Menu theme="light" mode="inline" defaultSelectedKeys={['article']}
-            // selectedKeys={this.state.selectedKeys}
-            >
+            <Menu
+              theme="light"
+              mode="inline"
+              defaultSelectedKeys={['article']}
+              selectedKeys={[this.props.history.location.pathname.replace('/home/', '')]}
+              >
               {
                 navigation.map((menu, index) => (
                   <Menu.Item key={menu.path}>
