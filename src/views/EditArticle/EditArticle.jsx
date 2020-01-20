@@ -64,6 +64,10 @@ export default class extends Component {
     })
   }
 
+  componentWillUnmount () {
+    this.emitChangeDebounced.cancel();
+  }
+
   emitChange () {
     this.md2code()
   }
