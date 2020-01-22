@@ -37,39 +37,45 @@ export default class extends Component {
       align: 'center',
       dataIndex: 'action',
       render: (text, record) => (
-        <span>
-          <Button type="dashed" size="small" onClick={() => this.editHandle(record)}>修改</Button>
+        <>
+          <Button
+            type="dashed"
+            size="small"
+            onClick={() => this.editHandle(record)}
+          >修改</Button>
           <Divider type="vertical" />
-          <Button type="danger" size="small" onClick={() => this.removeHandle(record)}>删除</Button>
-        </span>
-      ),
+          <Button
+            type="danger"
+            size="small"
+            onClick={() => this.removeHandle(record)}
+          >删除</Button>
+        </>
+      )
     }]
+
+    this.getInitData()
   }
 
   state = {
     data: [],
     modalVisible: false,
-    modalVisibleOfEdit: false,
     tagInputName: '',
-    tagInputNameOfEdit: '',
-    editId: ''
+    editId: '',
+    modalState: ''
   }
 
-  componentDidMount () {
+  getInitData () {
     $http.get('/api/tags')
-      .then(res => {
-        this.setState({ data: res })
-      })
-      .catch((e) => {
-        console.log(e);
-      })
+      .then(res => this.setState({ data: res }))
+      .catch((e) => console.log(e))
   }
 
   editHandle (record) {
     this.setState({
       editId: record._id,
-      tagInputNameOfEdit: record.name,
-      modalVisibleOfEdit: true
+      tagInputName: record.name,
+      modalVisible: true,
+      modalState: 'EDIT_STATE'
     })
   }
 
@@ -86,78 +92,76 @@ export default class extends Component {
             this.setState({ data: res })
             message.success('删除成功！');
           })
-          .catch((e) => {
-            console.log(e);
-          })
+          .catch((e) => console.log(e))
       }
     });
   }
 
-  submitAddTag = () => {
+  submitTag = () => {
+    const isEdit = this.state.modalState === 'EDIT_STATE'
+
     if (!this.state.tagInputName) return alert('标签名称不能为空！')
 
-    $http.post('/api/addTag', {
-      name: this.state.tagInputName
+    $http.post(isEdit ? '/api/updateTagById' : '/api/addTag', {
+      name: this.state.tagInputName,
+      ...(isEdit ? { id: this.state.editId } : {})
     })
       .then(res => {
-        this.setState({ data: res, tagInputName: '' })
-        message.success('新增成功！');
-        this.setModalVisible(false)
+        if (isEdit) {
+          this.setState({ data: res,modalVisible: false })
+          message.success('修改成功！');
+        } else {
+          this.setState({ data: res, tagInputName: '' })
+          message.success('新增成功！');
+          this.setModalVisible(false)
+        }
       })
-      .catch((e) => {
-        console.log(e);
-      })
+      .catch((e) => console.log(e))
   }
 
-  submitEditTag = () => {
-    if (!this.state.tagInputNameOfEdit) return alert('标签名称不能为空！')
-
-    $http.post('/api/updateTagById', {
-      id: this.state.editId,
-      name: this.state.tagInputNameOfEdit
+  setModalVisible (visible, isAdd) {
+    this.setState({
+      modalVisible: visible,
+      ...(
+        isAdd
+          ? { modalState: 'ADD_STATE', tagInputName: '' }
+          : { tagInputName: '' }
+      )
     })
-      .then(res => {
-        this.setState({ data: res })
-        message.success('修改成功！');
-      })
-      .catch((e) => {
-        console.log(e);
-      })
   }
 
-  setModalVisible (visible, isEdit) {
-    this.setState(
-      isEdit
-        ? { modalVisibleOfEdit: visible }
-        : ( visible
-            ? { tagInputName: '', modalVisible: visible }
-            : { modalVisible: visible } )
-    )
-  }
-
-  iptChange = (event, isEdit) => {
-    this.setState(
-      isEdit
-        ? { tagInputNameOfEdit: event.target.value }
-        : { tagInputName: event.target.value }
-    )
+  iptChange = (event) => {
+    this.setState({ tagInputName: event.target.value })
   }
 
   render () {
+    const modalTitle = this.state.modalState === 'ADD_STATE'
+      ? '新增标签'
+      : '修改标签'
+
     return (
       <div>
         <p className="mgb20">
-          <Button type="primary" icon="plus" onClick={() => this.setModalVisible(true)}>新增</Button>
+          <Button
+            type="primary"
+            icon="plus"
+            onClick={() => this.setModalVisible(true, 'ADD_STATE')}
+          >新增</Button>
         </p>
-        <Table columns={this.columns} dataSource={this.state.data} rowKey="_id" bordered />
+        <Table
+          columns={this.columns}
+          dataSource={this.state.data}
+          rowKey="_id"
+          bordered
+        />
         <Modal
-          title="新增标签"
+          title={modalTitle}
           okText="确定"
           cancelText="取消"
           maskClosable={false}
           destroyOnClose
           visible={this.state.modalVisible}
-          onOk={this.submitAddTag}
+          onOk={this.submitTag}
           onCancel={() => this.setModalVisible(false)}
         >
           <div style={{ textAlign: 'center' }}>
@@ -165,25 +169,6 @@ export default class extends Component {
               placeholder="请输入标签名称"
               value={this.state.tagInputName}
               onChange={this.iptChange}
-              style={{ width: 200 }}
-            />
-          </div>
-        </Modal>
-        <Modal
-          title="修改标签"
-          okText="确定"
-          cancelText="取消"
-          maskClosable={false}
-          destroyOnClose
-          visible={this.state.modalVisibleOfEdit}
-          onOk={this.submitEditTag}
-          onCancel={() => this.setModalVisible(false, 'isEdit')}
-        >
-          <div style={{ textAlign: 'center' }}>
-            标签名称：<Input
-              placeholder="请输入标签名称"
-              value={this.state.tagInputNameOfEdit}
-              onChange={(event) => this.iptChange(event, 'isEdit')}
               style={{ width: 200 }}
             />
           </div>
