@@ -2,7 +2,7 @@
   "name": "blog-admin",
   "version": "0.1.0",
   "description": "ryanxchen's blog admin built on React<create-react-app>,React-router-dom v4,ant design",
-  "author": "ryanxchen <jsryanxchen@gmail.com>",
+  "author": "ryanxchen <jsryanx@gmail.com>",
   "private": true,
   "scripts": {
     "dev": "PORT=4444 npm run start",
